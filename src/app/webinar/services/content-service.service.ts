@@ -38,7 +38,11 @@ export class ContentServiceService {
 
   addResourceToHierarchy({ rootId, unitId, children }) {
     const requestObj = {
-      header: {},
+      header: {
+        'contentType': 'application/json',
+        'Authorization': environment.bearer,
+        'X-Channel-ID': 'devcon'
+      },
       data: {
         "request": {
           "rootId": rootId,
@@ -46,8 +50,8 @@ export class ContentServiceService {
           "children": children
         }
       },
-      baseUrl: `${environment.baseUrl}/action/`,
-      url: 'content/v3/hierarchy/add'
+      baseUrl: `${environment.baseUrl}/api/`,
+      url: 'private/content/v3/hierarchy/add'
     }
     return this.patchRequestCall(requestObj);
   }
@@ -57,7 +61,7 @@ export class ContentServiceService {
       header: {
         'contentType': 'application/json',
         'user-id': 'mahesh',
-        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIyZWU4YTgxNDNiZWE0NDU4YjQxMjcyNTU5ZDBhNTczMiJ9.7m4mIUaiPwh_o9cvJuyZuGrOdkfh0Nm0E_25Cl21kxE',
+        'Authorization': environment.bearer,
         'X-Channel-ID': 'devcon'
       },
       data: {
@@ -82,7 +86,13 @@ export class ContentServiceService {
   public getCollectionHierarchy(identifier: string) {
     const req = {
       baseUrl: `${environment.baseUrl}/api/`,
-      url: `course/v1/hierarchy/${identifier}`
+      url: `private/content/v3/hierarchy/${identifier}?mode=edit`,
+      header: {
+        'contentType': 'application/json',
+        'user-id': 'mahesh',
+        'Authorization': environment.bearer,
+        'X-Channel-ID': 'devcon'
+      }
     };
     return this.getRequestCall(req).pipe(
       map(res => _.get(res, 'result.content'))

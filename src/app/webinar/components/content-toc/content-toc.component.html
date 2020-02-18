@@ -12,7 +12,7 @@
                 </div>
             </div>
             <div class="twelve wide column">
-                <app-collection-tree [nodes]="content" (handleWebinarEvent)="handleWebinar($event)">
+                <app-collection-tree (contentSelect)="contentSelect($event)" [nodes]="content" (handleWebinarEvent)="handleWebinar($event)">
                 </app-collection-tree>
             </div>
         </div>

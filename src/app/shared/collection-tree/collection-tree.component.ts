@@ -52,7 +52,7 @@ export class CollectionTreeComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input() public nodes;
   public options: any;
-  @Output() public contentSelect: EventEmitter<{ id: string, title: string }> = new EventEmitter();
+  @Output() public contentSelect: EventEmitter<{ id: string, title: string, content: any }> = new EventEmitter();
   @Input() contentStatus: any;
   @Output() public handleWebinarEvent = new EventEmitter();
   private rootNode: any;
@@ -81,13 +81,13 @@ export class CollectionTreeComponent implements OnInit, OnChanges, OnDestroy {
 
   public onNodeClick(node: any) {
     if (!node.folder) {
-      this.contentSelect.emit({ id: node.id, title: node.title });
+      this.contentSelect.emit({ id: node.id, title: node.title, content: _.get(node, 'data') });
     }
   }
 
   public onItemSelect(item: any) {
     if (!item.folder) {
-      this.contentSelect.emit({ id: item.data.id, title: item.title });
+      this.contentSelect.emit({ id: item.data.id, title: item.title, content: _.get(item, 'data') });
     }
   }
 
@@ -100,7 +100,7 @@ export class CollectionTreeComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   handleWebinar(child, eventType) {
-    this.handleWebinarEvent.emit({child, type: eventType});
+    this.handleWebinarEvent.emit({ child, type: eventType });
   }
 
   private createTreeModel() {
@@ -141,10 +141,26 @@ export class CollectionTreeComponent implements OnInit, OnChanges, OnDestroy {
         node.title = node.model.name + '<span> (' + this.commingSoonMessage + ')</span>';
         node.extraClasses = 'disabled';
       } else {
-        node.title = node.model.name || 'Untitled File';
-        node.extraClasses = '';
+        if (_.get(node, 'model.contentType') === 'CoachingSession') {
+          const sessionDetails = JSON.parse(_.get(node, 'model.sessionDetails'));
+          let infoString = '';
+          if (_.get(sessionDetails, 'endDate') - Date.now() > 0) {
+            infoString = `<b><i>Webinar is about to start in  ${(((_.get(sessionDetails, 'endDate') - Date.now()) / 1000) / 60).toFixed(1)} minutes</i><b>`;
+          } else {
+            infoString = `<b><i>Webinar has ended</i><b>`;
+          }
+          node.title = `${node.model.name}- ${infoString}` || 'Untitled File';
+          node.extraClasses = '';
+        } else {
+          node.title = node.model.name || 'Untitled File';
+          node.extraClasses = '';
+        }
       }
     });
+  }
+
+  test() {
+    console.log('hello')
   }
 
   private setCommingSoonMessage(node) {
