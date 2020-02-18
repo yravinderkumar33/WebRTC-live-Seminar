@@ -2,50 +2,71 @@
     <div class="main">
         <div class="logo-section">
             <div class="brand-logo">
-                <img src="./../../../../../assets/images/sunbird_logo.png" alt="brand logo">
+                <img src="assets/images/sunbird_logo.png" alt="brand logo">
             </div>
             <div class="main-logo">
-                <img src="./../../../../../assets/images/final-logo.png" alt=" logo">
+                <img src="assets/images/final-logo.png" alt=" logo">
             </div>
         </div>
         <div class="login-conatiner-main">
             <div class="scaner-section">
+
                 <div class="scaner" *ngIf="!qrCode && !captureImage">
                     <img class="scanner-gif" src="./../../../../../assets/images/scaner.gif" alt="scaner">
                     <button type="button" class="capture-btn" id="myBtn"
                         (click)="startCamera();captureImage=!captureImage;">Capture</button>
                     <div class="qrcode-link">
                         <span class="seperator">OR</span>
+                        <br>
                         <a (click)="qrCode= !qrCode">QR Code</a>
                     </div>
+                    <div class="qrcode-link">
+                        <span class="seperator">OR</span>
+                        <br>
+                        <a routerLink="/workspace">Anonymous User</a>
+                    </div>
                 </div>
-    
+
                 <div class="scaner" *ngIf="!qrCode && captureImage">
                     <video #video class="vid" autoplay></video>
                     <canvas #canvas class="vid"></canvas>
                     <button type="button" class="capture-btn" id="myBtn" (click)="capture()">Capture</button>
                     <div class="qrcode-link">
                         <span class="seperator">OR</span>
+                        <br>
                         <a (click)="qrCode= !qrCode">QR Code</a>
                     </div>
+                    <div class="qrcode-link">
+                        <span class="seperator">OR</span>
+                        <br>
+                        <a routerLink="/workspace">Anonymous User</a>
+                    </div>
                 </div>
-    
+
                 <div class="qr-code" *ngIf="qrCode">
                     <img src="./../../../../../assets/images/qr-code.svg" alt="QR Code">
                     <div class="input-container">
-                        <input class="input-field" [(ngModel)]="visitorid" type="text" placeholder="Enter your QR Code" name="qr-code">
+                        <input class="input-field" [(ngModel)]="visitorid" type="text" placeholder="Enter your QR Code"
+                            name="qr-code">
                         <span ngClass="" class="icon" (click)="getUserDtailsByVisitorId();"></span>
                     </div>
                     <div class="qrcode-link">
                         <span class="seperator">OR</span>
+                        <br>
                         <a (click)="qrCode= !qrCode; startCamera();">Capture</a>
                     </div>
+                    <div class="qrcode-link">
+                        <span class="seperator">OR</span>
+                        <br>
+                        <a routerLink="/workspace">Anonymous User</a>
+                    </div>
                 </div>
+
             </div>
         </div>
     </div>
-    
-   
+
+
 </div>
 
 
@@ -58,7 +79,7 @@
                     <div class="title">
                         {{name}}
                     </div>
-                    <div class="status-msg"> 
+                    <div class="status-msg">
                         You are recognized as Mr/Mrs. {{name}}. Please confirm and continue to create your content.
                     </div>
                 </div>

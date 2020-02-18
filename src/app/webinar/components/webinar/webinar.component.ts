@@ -1,6 +1,8 @@
 import { environment } from './../../../../environments/environment';
 import { Component, OnInit } from '@angular/core';
 import { WebrtcBroadcastService } from '../../services/webrtc-broadcast.service';
+import * as _ from 'lodash-es';
+import { LoginService } from 'src/app/services/login/login.service';
 
 @Component({
   selector: 'app-webinar',
@@ -15,6 +17,9 @@ export class WebinarComponent implements OnInit {
   participants
   startConferencing
   roomsList
+  disableDownloadButton: boolean = true;
+  disableEndRecordStreamButton: boolean = true;
+  showLoader: boolean = true;
 
   config = {
     openSocket: function (config) {
@@ -40,7 +45,7 @@ export class WebinarComponent implements OnInit {
         });
         return null;
       };
-      
+
       socket.on('message', config.onmessage);
     },
     onRemoteStream: (media) => {
@@ -66,6 +71,7 @@ export class WebinarComponent implements OnInit {
       buttonElement.id = room.roomToken;
       buttonElement.innerHTML = `JOIN Room - ${room.roomName}`;
       div.appendChild(buttonElement);
+      this.showLoader = false;
       this.roomsList.insertBefore(div, this.roomsList.firstChild);
       div.onclick = () => {
         this.captureUserMedia(() => {
@@ -79,9 +85,24 @@ export class WebinarComponent implements OnInit {
     }
   };
 
-  constructor(private broadcastService: WebrtcBroadcastService) {
+  constructor(private broadcastService: WebrtcBroadcastService, private loginService: LoginService) {
     this.broadcastUI = this.broadcastService.broadcast(this.config);
   }
+
+  endRecording() {
+    this.disableDownloadButton = false;
+    if (_.get(window, 'stopRecordingStream')) {
+      window['stopRecordingStream']();
+    }
+  }
+
+  downloadRecording() {
+    this.disableEndRecordStreamButton = true;
+    if (_.get(window, 'downloadRecordingStream')) {
+      window['downloadRecordingStream']();
+    }
+  }
+
   ngOnInit() {
     if (!window.location.hash.replace('#', '').length) {
       window.location.href = window.location.href.split('#')[0] + '#' + (Math.random() * 100).toString().replace('.', '');
@@ -115,9 +136,12 @@ export class WebinarComponent implements OnInit {
     this.getUserMedia({
       video: video,
       onsuccess: (stream) => {
+        if (_.get(window, 'handleSuccess')) {
+          window['handleSuccess'](stream);
+        }
+        this.disableEndRecordStreamButton = false;
         this.config['attachStream'] = stream;
         callback && callback();
-
         video.setAttribute('muted', "true");
         this.rotateVideo(video);
       },
@@ -129,7 +153,6 @@ export class WebinarComponent implements OnInit {
   }
 
   getUserMedia(options) {
-
     var video_constraints = {
       mandatory: {},
       optional: []

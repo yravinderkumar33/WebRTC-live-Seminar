@@ -2,10 +2,14 @@
   <div class="webinar-container visible">
     <div class="sb-pageSection ">
       <div class="sb-pageSection-header">
-        <h1 class="sb-pageSection-title">Live web seminar</h1>
+        <h1 class="sb-pageSection-title">Live Coaching Session</h1>
       </div>
 
-      <div class="sb-field-group" *ngIf="!hideCreateWebinarForm">
+      <div class="sb-pageSection-header" *ngIf="!loginService.user && !loginService.isLoggedIn && showLoader">
+        <app-loader [data]="{loaderMessage: 'Searching For Chat Rooms...'}"></app-loader>
+      </div>
+
+      <div class="sb-field-group" *ngIf="!hideCreateWebinarForm && loginService.user && loginService.isLoggedIn">
         <label>Please Enter Chat Room Name To Start The Webinar:</label>
         <input type="text" class="sb-form-control required mb-16" id="conference-name" placeholder="Chat Room Name"
           required>
@@ -17,6 +21,14 @@
       </div>
     </div>
   </div>
+
+  <ng-container *ngIf="loginService.user && loginService.isLoggedIn">
+    <button id="endRecording" [disabled]="disableEndRecordStreamButton" (click)="endRecording()"
+      class="sb-btn sb-btn-primary sb-btn-normal">End Recording</button>
+    <button id="downloadRecording" [disabled]="disableDownloadButton" (click)="downloadRecording()"
+      class="sb-btn sb-btn-primary sb-btn-normal">Download
+      Recording</button>
+  </ng-container>
 
   <div style="padding: 40px 0;">
     <div id="participants" class="video-play-container">
