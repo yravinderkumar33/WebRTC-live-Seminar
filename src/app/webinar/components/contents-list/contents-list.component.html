@@ -1,18 +1,19 @@
-<div>
+<div class="ui container mt-24">
+    <div class="twelve wide column">
+        <h4>BOOKS LIST</h4>
+        <div>
+            <div *ngIf="contents$ | async as contents; else loading;" class="grid">
+                <div *ngFor="let content of contents">
+                    <sb-library-card (click)="onBookClick(content)" [isMobile]="false" [isOffline]="false"
+                        [content]="content" [cardImg]="content.posterImage">
+                    </sb-library-card>
 
-    <h1>BOOKS LIST</h1>
-    <div>
-        <div *ngIf="contents$ | async as contents; else loading;" class="grid">
-            <div *ngFor="let content of contents">
-                <sb-library-card (click)="onBookClick(content)" [isMobile]="false" [isOffline]="false" [content]="content" [cardImg]="content.posterImage">
-                </sb-library-card>
-    
+                </div>
             </div>
         </div>
-    </div>
-    
-    <ng-template #loading>
-        Loading...
-    </ng-template>
 
+        <ng-template #loading>
+            Loading...
+        </ng-template>
+    </div>
 </div>

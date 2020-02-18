@@ -40,7 +40,7 @@ export class WebinarComponent implements OnInit {
         });
         return null;
       };
-
+      
       socket.on('message', config.onmessage);
     },
     onRemoteStream: (media) => {

@@ -337,9 +337,7 @@ export class WebrtcBroadcastService {
     const onDefaultSocketResponse = (response) => {
       this._isbroadCaster = false;
       if (response.userToken == self.userToken) return;
-
       if (isGetNewRoom && response.roomToken && response.broadcaster) config.onRoomFound(response);
-
       if (response.userToken && response.joinUser == self.userToken && response.participant && channels.indexOf(response.userToken) == -1) {
         channels += response.userToken + '--';
         openSubSocket({
