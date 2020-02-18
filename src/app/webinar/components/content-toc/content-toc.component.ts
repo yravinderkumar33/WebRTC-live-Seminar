@@ -83,7 +83,7 @@ export class ContentTocComponent implements OnInit {
         console.log('failed to launch webinar');
       })
     }, err => {
-      console.log('err');
+      console.log('err', err);
       this.router.navigate(['/']).catch(err => {
         console.log('failed to redirect to home page');
       })

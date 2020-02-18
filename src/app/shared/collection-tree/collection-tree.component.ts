@@ -141,7 +141,7 @@ export class CollectionTreeComponent implements OnInit, OnChanges, OnDestroy {
         node.title = node.model.name + '<span> (' + this.commingSoonMessage + ')</span>';
         node.extraClasses = 'disabled';
       } else {
-        if (_.get(node, 'model.contentType') === 'CoachingSession') {
+        if (_.get(node, 'model.contentType') === 'CoachingSession' && _.get(node, 'model.sessionDetails')) {
           const sessionDetails = JSON.parse(_.get(node, 'model.sessionDetails'));
           let infoString = '';
           if (_.get(sessionDetails, 'endDate') - Date.now() > 0) {

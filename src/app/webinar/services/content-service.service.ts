@@ -22,7 +22,10 @@ export class ContentServiceService {
 
   removeResourceFromHierarchy({ rootId, unitId, children }) {
     const requestObj = {
-      header: {},
+      header: {
+        'Content-Type': 'application/json',
+        'Authorization': environment.bearer
+      },
       data: {
         "request": {
           "rootId": rootId,
@@ -39,9 +42,9 @@ export class ContentServiceService {
   addResourceToHierarchy({ rootId, unitId, children }) {
     const requestObj = {
       header: {
-        'contentType': 'application/json',
+        'Content-Type': 'application/json',
         'Authorization': environment.bearer,
-        'X-Channel-ID': 'devcon'
+        'x-channel-id': 'devcon'
       },
       data: {
         "request": {
@@ -50,19 +53,18 @@ export class ContentServiceService {
           "children": children
         }
       },
-      baseUrl: `${environment.baseUrl}/api/`,
-      url: 'private/content/v3/hierarchy/add'
+      baseUrl: `${environment.baseUrl}/action/`,
+      url: 'content/v3/hierarchy/add'
     }
     return this.patchRequestCall(requestObj);
   }
 
-  createContent({ name, mimeType, code, contentType, startTime, endTime }) {
+  createContent({ name, mimeType, code, contentType, startTime, endTime, sessionDetails }) {
     const requestObj = {
       header: {
-        'contentType': 'application/json',
-        'user-id': 'mahesh',
+        'Content-Type': 'application/json',
         'Authorization': environment.bearer,
-        'X-Channel-ID': 'devcon'
+        'x-channel-id': 'devcon'
       },
       data: {
         "request": {
@@ -72,26 +74,25 @@ export class ContentServiceService {
             "code": code,
             "contentType": contentType,
             "startTime": startTime,
-            "endTime": endTime
+            "endTime": endTime,
+            sessionDetails
           }
         }
       },
-      baseUrl: `${environment.baseUrl}/api/`,
-      url: 'private/content/v3/create'
+      baseUrl: `${environment.baseUrl}/action/`,
+      url: 'content/v3/create'
     }
-
     return this.postRequestCall(requestObj)
   }
 
   public getCollectionHierarchy(identifier: string) {
     const req = {
-      baseUrl: `${environment.baseUrl}/api/`,
-      url: `private/content/v3/hierarchy/${identifier}?mode=edit`,
+      baseUrl: `${environment.baseUrl}/action/`,
+      url: `content/v3/hierarchy/${identifier}?mode=edit`,
       header: {
-        'contentType': 'application/json',
-        'user-id': 'mahesh',
+        'Content-Type': 'application/json',
         'Authorization': environment.bearer,
-        'X-Channel-ID': 'devcon'
+        'X-Channel-Id': 'devcon'
       }
     };
     return this.getRequestCall(req).pipe(
