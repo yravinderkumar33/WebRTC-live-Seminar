@@ -22,8 +22,19 @@
 }
 
 .webinar-container {
-    height: 100vh;
+    height: calc(100vh - 168px);
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.video-play-container {
+    display: grid;
+    grid-gap: 16px;
+    grid-template-columns: repeat(3, 1fr);
+}
+
+::ng-deep {
+
+    
 }

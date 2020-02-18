@@ -1,3 +1,4 @@
+import { environment } from './../../../../environments/environment';
 import { Component, OnInit } from '@angular/core';
 import { WebrtcBroadcastService } from '../../services/webrtc-broadcast.service';
 
@@ -8,7 +9,7 @@ import { WebrtcBroadcastService } from '../../services/webrtc-broadcast.service'
 })
 export class WebinarComponent implements OnInit {
 
-
+  hideCreateWebinarForm: boolean = false;
 
   broadcastUI;
   participants
@@ -17,7 +18,7 @@ export class WebinarComponent implements OnInit {
 
   config = {
     openSocket: function (config) {
-      var SIGNALING_SERVER = 'https://localhost:9559/';
+      var SIGNALING_SERVER = environment.signalingServer;
       config.channel = config.channel || location.href.replace(/\/|:|#|%|\.|\[|\]/g, '');
       var sender = Math.round(Math.random() * 999999999) + 999999999;
 
@@ -45,7 +46,10 @@ export class WebinarComponent implements OnInit {
     onRemoteStream: (media) => {
       var video = media.video;
       video.setAttribute('controls', true);
-      this.participants.insertBefore(video, this.participants.firstChild);
+      const div = document.createElement('div');
+      div.classList.add('video-play');
+      div.appendChild(video);
+      this.participants.insertBefore(div, this.participants.firstChild);
       video.play();
       this.rotateVideo(video);
     },
@@ -53,23 +57,28 @@ export class WebinarComponent implements OnInit {
       var alreadyExist = document.getElementById(room.broadcaster);
       if (alreadyExist) return;
       if (typeof this.roomsList === 'undefined') this.roomsList = document.body;
-      var tr = document.createElement('tr');
-      tr.setAttribute('id', room.broadcaster);
-      tr.innerHTML = '<td>' + room.roomName + '</td>' +
-        '<td><button class="join" id="' + room.roomToken + '">Join Room</button></td>';
-      this.roomsList.insertBefore(tr, this.roomsList.firstChild);
-      tr.onclick = () => {
+      this.hideCreateWebinarForm = true;
+      const div = document.createElement('div');
+      div.classList.add('d-flex', 'flex-ai-center');
+      div.id = room.broadcaster;
+      const buttonElement = document.createElement('button');
+      buttonElement.classList.add('join', 'width-100', 'my-16', 'sb-btn', 'sb-btn-secondary', 'sb-btn-normal');
+      buttonElement.id = room.roomToken;
+      buttonElement.innerHTML = `JOIN Room - ${room.roomName}`;
+      div.appendChild(buttonElement);
+      this.roomsList.insertBefore(div, this.roomsList.firstChild);
+      div.onclick = () => {
         this.captureUserMedia(() => {
           this.broadcastUI.joinRoom({
-            roomToken: tr.querySelector('.join').id,
-            joinUser: tr.id
+            roomToken: div.querySelector('.join').id,
+            joinUser: div.id
           });
         });
         this.hideUnnecessaryStuff();
       };
     }
   };
-  
+
   constructor(private broadcastService: WebrtcBroadcastService) {
     this.broadcastUI = this.broadcastService.broadcast(this.config);
   }
@@ -95,10 +104,13 @@ export class WebinarComponent implements OnInit {
   }
 
   captureUserMedia(callback) {
+    const div = document.createElement('div');
+    div.classList.add('video-play');
     var video = document.createElement('video');
     video.setAttribute('autoplay', 'true');
     video.setAttribute('controls', 'true');
-    this.participants.insertBefore(video, this.participants.firstChild);
+    div.appendChild(video);
+    this.participants.insertBefore(div, this.participants.firstChild);
 
     this.getUserMedia({
       video: video,

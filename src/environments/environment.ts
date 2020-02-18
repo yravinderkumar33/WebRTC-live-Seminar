@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  baseUrl: "https://staging.ntp.net.in"
+  baseUrl: "https://staging.ntp.net.in",
+  signalingServer: 'https://localhost:9559/'
 };
 
 /*

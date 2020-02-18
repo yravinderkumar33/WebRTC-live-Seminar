@@ -20,6 +20,65 @@ export class ContentServiceService {
     )
   }
 
+  removeResourceFromHierarchy({ rootId, unitId, children }) {
+    const requestObj = {
+      header: {},
+      data: {
+        "request": {
+          "rootId": rootId,
+          "unitId": unitId,
+          "children": children
+        }
+      },
+      baseUrl: `${environment.baseUrl}/action/`,
+      url: 'content/v3/hierarchy/remove'
+    }
+    return this.deleteRequestCall(requestObj);
+  }
+
+  addResourceToHierarchy({ rootId, unitId, children }) {
+    const requestObj = {
+      header: {},
+      data: {
+        "request": {
+          "rootId": rootId,
+          "unitId": unitId,
+          "children": children
+        }
+      },
+      baseUrl: `${environment.baseUrl}/action/`,
+      url: 'content/v3/hierarchy/add'
+    }
+    return this.patchRequestCall(requestObj);
+  }
+
+  createContent({ name, mimeType, code, contentType, startTime, endTime }) {
+    const requestObj = {
+      header: {
+        'contentType': 'application/json',
+        'user-id': 'mahesh',
+        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIyZWU4YTgxNDNiZWE0NDU4YjQxMjcyNTU5ZDBhNTczMiJ9.7m4mIUaiPwh_o9cvJuyZuGrOdkfh0Nm0E_25Cl21kxE',
+        'X-Channel-ID': 'devcon'
+      },
+      data: {
+        "request": {
+          "content": {
+            "name": name,
+            "mimeType": mimeType,
+            "code": code,
+            "contentType": contentType,
+            "startTime": startTime,
+            "endTime": endTime
+          }
+        }
+      },
+      baseUrl: `${environment.baseUrl}/api/`,
+      url: 'private/content/v3/create'
+    }
+
+    return this.postRequestCall(requestObj)
+  }
+
   public getCollectionHierarchy(identifier: string) {
     const req = {
       baseUrl: `${environment.baseUrl}/api/`,
@@ -30,9 +89,18 @@ export class ContentServiceService {
     );
   }
 
-
-  public createWebinar(request) {
-
+  patchRequestCall(requestParam): Observable<any> {
+    const httpOptions = {
+      params: requestParam.param,
+      headers: _.get(requestParam, 'header')
+    };
+    return this.http.patch(_.get(requestParam, 'baseUrl') + _.get(requestParam, 'url'), _.get(requestParam, 'data'), httpOptions).pipe(
+      mergeMap((data: any) => {
+        if (_.get(data, 'responseCode') !== 'OK') {
+          return throwError(data);
+        }
+        return of(data);
+      }));
   }
 
   getRequestCall(requestParam): Observable<any> {
@@ -63,8 +131,19 @@ export class ContentServiceService {
       }));
   }
 
-  updateToc() {
-
+  deleteRequestCall(requestParam) {
+    const httpOptions = {
+      headers: _.get(requestParam, 'header'),
+      params: requestParam.param,
+      body: requestParam.data
+    };
+    return this.http.delete(_.get(requestParam, 'baseUrl') + requestParam.url, httpOptions).pipe(
+      mergeMap((data: any) => {
+        if (data.responseCode !== 'OK') {
+          return throwError(data);
+        }
+        return of(data);
+      }));
   }
 
 }
