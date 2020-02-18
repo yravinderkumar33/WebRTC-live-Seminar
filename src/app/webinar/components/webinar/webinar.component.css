@@ -1,0 +1,29 @@
+.sb-pageSection {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 392px;
+    width: 480px;
+    border: 1px solid #dedede;
+    border-radius: 4px;
+    background: white;
+    box-shadow: 0 0.125rem 0.4375rem 0 rgba(0,0,0,.16);
+}
+
+.sb-pageSection h1.sb-pageSection-title {
+    font-size: 30px;
+}
+
+.sb-field-group {
+    min-width: 360px;
+    text-align: center;
+}
+
+.webinar-container {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
