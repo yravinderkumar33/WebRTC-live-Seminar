@@ -1,0 +1,247 @@
+// @import "./fonts/noto/fonts.css";
+
+.login-bg{
+    background: linear-gradient(to right, #d3cce3, #e9e4f0);
+    height: 100%;
+    position: fixed;
+    width: 100%;
+    overflow: auto;
+    .main{
+      max-width: 1280px;
+      margin :0 auto;
+      height: 100%;
+      max-width: 1280px;
+      margin: 0 auto;
+      height: 100%;
+      vertical-align: middle;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      .logo-section{
+        padding: 2em;
+        display: flex;
+        max-height: 120px;
+        justify-content:center;
+        align-items: center;
+        .main-logo{
+          width: 190px;
+          height: 60px;
+          display: inline-flex;
+          margin-left: 10em;
+          img{
+            width: 100%;
+          }
+        }
+      }
+      .login-conatiner-main{
+        display: flex;
+        padding: 3em;
+        justify-content: center;
+        .scaner-section{
+          .scaner{
+            text-align: center;
+            width: 300px;
+            position: relative;
+            .scanner-gif {
+              width: 300px;
+              height: 300px;
+              border-radius: 1rem;
+              box-shadow: 0 0.125rem 0.4375rem 0 rgba(0,0,0,.95);
+            }          
+            .capture-btn{
+              height: 3em;
+              background: linear-gradient(to right, rgba(113, 21, 182, 0.61), rgb(113, 21, 182), rgb(85, 46, 241));
+              color: #fff;
+              border: none;
+              cursor: pointer;
+              margin: 2em 0 1.5em 0;
+              text-transform: uppercase;
+              padding: 0 4em;
+              letter-spacing: 1px;
+              font-size: 1.2em;
+              border-radius: 0.4em;
+            }
+            canvas{
+              display: inline-block;
+              position: absolute;
+              width: 300px;
+              height: 300px;
+              left: 0;
+              right: 0;
+            }
+          }
+          .qr-code{
+            text-align: center;
+            width: 250px;
+            img{
+              padding: 1em;
+              width: 100%;
+              width: 250px;
+              height: 250px;
+              border: 1px solid #666666;
+              background: #fff;
+            }
+            .input-container{
+              display: flex;
+              display: -ms-flexbox;
+              margin: 1.5em 0;
+              height: 2.5em;
+              width: 100%;
+              .icon::before{
+                content: "\2192";
+                font-size: 1.5em;
+              }
+              .icon {
+                background: #3A0C77;
+                color: #fff;
+                text-align: center;
+                cursor: pointer;
+                width: 20%;
+                height: 2.5em;
+                line-height: 2.2em;
+                margin: 0;
+              }
+              .input-field {
+                width: 80%;
+                padding: 0 0.6em;
+                outline: none;
+                font-size: 1.2em;
+                line-height: 2.6em;
+                color: #575757;
+                border: 1px solid #707070;
+               }
+            }
+          }
+          .seperator{
+            font-size: 0.8em;
+              margin: 0.5em;
+          }
+          .qrcode-link a{
+            color: #024f9d;
+            text-decoration: none;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-size: 1.2em;
+            &:hover{
+              text-decoration: underline;
+            }
+          }
+        }
+      }
+    }
+  }
+   /* The Modal (background) */
+  .login-modal {
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 6.25em; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  }
+  /* Modal Content */
+  .modal-content {
+    position: relative;
+    background-color: #fefefe;
+    margin: auto;
+    padding: 0;
+    border: 1px solid #888;
+    width: 30%;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+    -webkit-animation-name: animatetop;
+    -webkit-animation-duration: 0.4s;
+    animation-name: animatetop;
+    animation-duration: 0.4s
+  }
+  /* Add Animation */
+  @-webkit-keyframes animatetop {
+    from {top:-300px; opacity:0} 
+    to {top:0; opacity:1}
+  }
+  @keyframes animatetop {
+    from {top:-300px; opacity:0}
+    to {top:0; opacity:1}
+  }
+  
+  
+  .modal-body {
+    text-align:center;
+      padding: 1em;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-direction: column;
+  }
+  .sb-btn-normal {
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+      margin-top: 0.5rem;
+  }
+  .sb-btn-primary {
+      background-color: #024F9D;
+      border-color: #024F9D;
+      color:#fff;
+  }
+   .sb-btn {
+      border-radius: 0.25rem;
+      white-space: nowrap;
+      user-select: none;
+      outline: 0;
+      display: inline-block;
+      cursor: pointer;
+      min-width: 4rem;
+      line-height: 1.15;
+      text-transform: capitalize;
+      text-decoration: none;
+  }
+   .sb-btn-primary:hover, .sb-btn-       primary:active{
+      background-color: #002e50;
+      border: 0.0625rem solid transparent;
+      color: #fff;
+  }
+  .close-btn{
+      background: #fff;
+  }
+  .close-btn:hover {
+    background: hsl(0, 0%, 60%);
+    border-color: hsl(0, 0%, 60%);
+    color: #fff;
+  }
+  .sb-btn-error {
+      background-color: #ff6979;
+      border-color: #ff6979;
+      color:#fff;
+  }
+  .sb-btn-secondary{
+      background-color: #07BC81;
+      border-color: #07BC81;
+      color: #fff;
+  }
+  .sb-btn-secondary:hover {
+  background-color: #008840;
+  border-color: #008840;
+  }
+   .sb-btn-error:hover, .sb-btn-error:active{
+      background-color: #ff4558;
+      border: 0.0625rem solid transparent;
+      color: #fff;
+  }
+  .status-content img{
+    width: 120px;
+  }
+  .status-content .title{
+    font-size: 1.5em;
+    color: #470D7D;
+    font-weight: bold;
+  }
+  .status-content .status-msg{
+    margin: 0.5em 0;
+      font-size: 1em;
+      color: #666666;
+  }
+  

@@ -1,0 +1,145 @@
+
+ 
+
+
+/*landing page style*/
+.landing-container{
+    width: 100%;
+    height:100%;
+  }
+  
+  .header {
+  min-height: 4rem;
+  background: #fff;
+  margin: 0 2em;
+  }
+  
+  .header-content {
+  display: flex;
+  padding: 0.5rem 0px;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  }
+  
+  .header-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  }
+  
+  // .logo {
+  // height: 2.8125rem;
+  // max-height: 2.8125rem;
+  // }
+  
+  
+  .profile-dropdown {
+  position: relative;
+  display: inline-block;
+  transition-duration: 0.5s;
+  cursor: pointer;
+  }
+  
+  .profile-dropdown-list {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 10rem;
+  box-shadow: 0px 0.5rem 1rem 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  right: 0;
+  text-align: left;
+  }
+  
+  .profile-dropdown-list a {
+  color: #000;
+  padding: 0.75rem 1rem;
+  text-decoration: none;
+  display: block;
+  }
+  
+  .profile-dropdown-list a:hover {
+  background-color: #f1f1f1
+  }
+  
+  .profile-dropdown:hover .profile-dropdown-list {
+  display: block;
+  }
+  
+  .sb-card-container {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 1280px;
+      margin: 0 auto
+  }
+  
+  .sb-card:hover{
+  border-left: 0.25rem solid #07bc81;
+  cursor: pointer;
+  box-shadow: 0.125rem 0.3125rem 0.4375rem 0 rgba(0, 0, 0, 0.2);
+  }
+  
+  .sb-card {
+  min-height: 8rem;
+  margin: 1.5rem 1.5rem 1.5rem 0;
+  max-width: 18.25rem;
+  border: 0.5px solid #F2F2F2;
+  border-left: 0.25rem solid #fff;
+  border-radius: 0.25rem;
+  background: #fff;
+  padding: 1rem 1.5rem;
+  }
+  
+  .sb-title {
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+  font-weight: 700;
+  }
+  
+  .sb-description {
+  font-size: 0.875rem;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  }
+  
+  .menu-container {
+  min-height: 3rem;
+  background: #024F9D;
+  }
+  
+  .menu-tabs {
+  margin-left: 0px;
+  overflow: hidden;
+  display: flex;
+  }
+  
+  .menu-tabs a {
+    font-size: 0.875rem;
+    color: #fff;
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+  }
+  
+  .menu-tabs a:hover,
+  .menu-tabs a.active {
+  background: #042D55;
+  color: #fff;
+  text-decoration: none;
+  }
+  label{
+    font-size: 1.2em;
+    margin: 1em 0;
+    color: var(--gray);
+  }
+  
+  
+  @media only screen and (min-width: 320px) and (max-width: 640px)  {
+    .menu-tabs {
+        flex-direction: column;
+    }
+  }
+  
