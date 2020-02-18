@@ -16,6 +16,32 @@ export class ConfigService {
     this.http = http;
   }
 
+  searchContents(): Observable<any> {
+    const requestParam = {
+      url: 'composite/v1/search',
+      data: {
+        request: {
+          filters: {
+            objectType: 'Content',
+            status: ['Review', 'Draft', 'Live']
+          },
+          exists: ['cml_tags', 'cml_keywords', 'cml_quality', 'ckp_translation', 'ckp_size'],
+          fields: ['identifier', 'name', 'description', 'status', 'contentType',
+            'createdBy', 'appIcon', 'cml_tags', 'cml_keywords', 'cml_quality', 'ckp_translation', 'ckp_size'],
+        }
+      }
+    };
+    return this.post(requestParam);
+  }
+  getCurationData(contents) {
+    const metaData = [];
+    _.forEach(contents, content => {
+      const data = _.pick(content, 'cml_tags', 'cml_keywords', 'cml_quality', 'ckp_translation', 'ckp_size');
+      metaData.push({ identifier: content.identifier, metaData: data, name: content.name });
+    });
+    return metaData;
+  }
+
   private getHeader(headers?: any) {
     // tslint:disable-next-line:variable-name
     const default_headers = {
@@ -27,7 +53,7 @@ export class ConfigService {
 
   post(requestParam): Observable<any> {
     const httpOptions: HttpOptions = {
-      headers: requestParam.header ?  this.getHeader(requestParam.header) : this.getHeader(),
+      headers: requestParam.header ? this.getHeader(requestParam.header) : this.getHeader(),
       params: requestParam.param
     };
     return this.http.post(this.baseUrl + requestParam.url, requestParam.data, httpOptions).pipe(
@@ -41,7 +67,7 @@ export class ConfigService {
 
   get(requestParam): Observable<any> {
     const httpOptions: HttpOptions = {
-      headers: requestParam.header ?  this.getHeader(requestParam.header) : this.getHeader(),
+      headers: requestParam.header ? this.getHeader(requestParam.header) : this.getHeader(),
       params: requestParam.param
     };
     return this.http.get(this.baseUrl + requestParam.url, httpOptions).pipe(

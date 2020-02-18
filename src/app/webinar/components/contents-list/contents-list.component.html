@@ -1,6 +1,5 @@
 <div class="ui container mt-24">
     <div class="twelve wide column">
-        <h4>BOOKS LIST</h4>
         <div>
             <div *ngIf="contents$ | async as contents; else loading;" class="grid">
                 <div *ngFor="let content of contents">
@@ -15,5 +14,6 @@
         <ng-template #loading>
             Loading...
         </ng-template>
+        
     </div>
 </div>

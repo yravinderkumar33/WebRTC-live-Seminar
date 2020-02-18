@@ -25,7 +25,7 @@ export class ContentsListComponent implements OnInit {
   }
 
   public onBookClick(content) {
-    this.router.navigate([`webinar/play/${_.get(content, 'identifier')}`]);
+    this.router.navigate([`/workspace/webinar/play/${_.get(content, 'identifier')}`]);
   }
 
 }
