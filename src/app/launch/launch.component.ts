@@ -1,9 +1,10 @@
 import { ConfigService, TelemetryService } from '../services';
 import { Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { UUID } from 'angular2-uuid';
-import { catchError, map } from 'rxjs/operators';
-import { throwError, Observable } from 'rxjs';
-import { ActivatedRoute, Router } from '@angular/router';
+import { catchError } from 'rxjs/operators';
+import { throwError } from 'rxjs';
+import { Router } from '@angular/router';
+import { LoginService } from '../services/login/login.service';
 
 const STALL_ID = 'creation_2';
 const IDEA_ID = 'live_coaching_session';
@@ -36,9 +37,12 @@ export class LaunchComponent implements OnInit {
   };
 
   constructor(private renderer: Renderer2,
-              public configService: ConfigService,
-              public telemetryServcie: TelemetryService,
-              public router: Router) { }
+    public configService: ConfigService,
+    public telemetryServcie: TelemetryService,
+    public router: Router, private loginService: LoginService) {
+    this.loginService.isLoggedIn = false;
+    this.loginService.user = undefined;
+  }
 
   ngOnInit() {
     this.telemetryServcie.initialize({
@@ -82,23 +86,23 @@ export class LaunchComponent implements OnInit {
     const imageId = 'do_11295943688090419214';
     const imageName = `${id}.png`;
     fetch(this.image)
-    .then(res => res.blob())
-    .then(blob => {
-      const fd = new FormData();
-      const file = new File([blob], imageName);
-      fd.append('file', file);
-      const request = {
-        url: `private/content/v3/upload/${imageId}`,
-        data: fd
-      };
-      this.configService.post(request).pipe(catchError(err => {
-        const errInfo = { errorMsg: 'Image upload failed' };
-        return throwError(errInfo);
-      })).subscribe((response) => {
-        console.log('response ', response);
-        this.identifyFace(response);
+      .then(res => res.blob())
+      .then(blob => {
+        const fd = new FormData();
+        const file = new File([blob], imageName);
+        fd.append('file', file);
+        const request = {
+          url: `private/content/v3/upload/${imageId}`,
+          data: fd
+        };
+        this.configService.post(request).pipe(catchError(err => {
+          const errInfo = { errorMsg: 'Image upload failed' };
+          return throwError(errInfo);
+        })).subscribe((response) => {
+          console.log('response ', response);
+          this.identifyFace(response);
+        });
       });
-    });
   }
 
   identifyFace(response) {
@@ -117,6 +121,7 @@ export class LaunchComponent implements OnInit {
       const data = {
         profileId: res.result.osid
       };
+      this.loginService.user = res.result.osid;
       this.telemetryServcie.visit(data);
       this.openSuccessModal = true;
       this.openErrorModal = false;
@@ -137,7 +142,7 @@ export class LaunchComponent implements OnInit {
             entityType: ['Visitor'],
             filters: {
               code: {
-                eq : this.visitorid
+                eq: this.visitorid
               }
             }
           }
@@ -149,6 +154,7 @@ export class LaunchComponent implements OnInit {
           const data = {
             profileId: res.result.Visitor[0].osid
           };
+          this.loginService.user = res.result.Visitor[0].osid;
           this.telemetryServcie.visit(data);
           this.openSuccessModal = true;
           this.openErrorModal = false;
@@ -160,7 +166,7 @@ export class LaunchComponent implements OnInit {
   }
 
   gotoWorkspace() {
-    // this.closeModal();
+    this.loginService.isLoggedIn = true;
     this.router.navigate(['/workspace']);
   }
 

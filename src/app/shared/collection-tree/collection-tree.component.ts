@@ -4,6 +4,7 @@ import { Subscription, Subject } from 'rxjs';
 import * as TreeModel from 'tree-model';
 import { Router } from '@angular/router';
 import { appConfig } from '../config';
+import { LoginService } from 'src/app/services/login/login.service';
 
 export enum MimeTypeTofileType {
   'application/vnd.ekstep.ecml-archive' = 'ECML',
@@ -68,7 +69,7 @@ export class CollectionTreeComponent implements OnInit, OnChanges, OnDestroy {
   public commingSoonMessage: string;
   public unsubscribe$ = new Subject<void>();
 
-  constructor(public router: Router) {
+  constructor(public router: Router, private loginService: LoginService) {
     this.options = appConfig.collectionTreeOptions;
   }
   ngOnInit() {

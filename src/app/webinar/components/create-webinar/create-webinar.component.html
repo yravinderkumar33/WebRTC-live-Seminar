@@ -20,7 +20,8 @@
       <div class="sb-field-group">
         <label>Webinar Description</label>
         <div class="sb-field relative">
-          <textarea formControlName="description" rows="2" name="moretext" class="sb-form-control" placeholder="Enter webinar description"></textarea>
+          <textarea formControlName="description" rows="2" name="moretext" class="sb-form-control"
+            placeholder="Enter webinar description"></textarea>
         </div>
       </div>
       <div class="d-flex flex-w-wrap">
@@ -29,7 +30,8 @@
           <div class="ui read-only calendar rangestartAdd" id="rangestartAdd">
             <div class="sb-field ui left icon input">
               <i class="calendar icon date-calendar"></i>
-              <input formControlName="startDate" class="sb-form-control" [pickerMinDate]="pickerMinDate" suiDatepicker [pickerMode]="'date'">
+              <input formControlName="startDate" class="sb-form-control" [pickerMinDate]="pickerMinDate" suiDatepicker
+                [pickerMode]="'date'">
             </div>
           </div>
         </div>
@@ -39,7 +41,8 @@
           <div class="ui read-only calendar rangestartAdd" id="rangestartAdd">
             <div class="sb-field ui left icon input">
               <i class="calendar icon date-calendar"></i>
-              <input formControlName="endDate" class="sb-form-control" suiDatepicker [pickerMode]="'date'">
+              <input formControlName="endDate" class="sb-form-control" suiDatepicker [pickerMinDate]="pickerMinDate"
+                [pickerMode]="'date'">
             </div>
           </div>
         </div>
@@ -50,7 +53,8 @@
 
   <!--Actions-->
   <div class="sb-modal-actions">
-    <button [disabled]="createWebinarForm.status === 'INVALID'" class="sb-btn sb-btn-normal sb-btn-primary" (click)="createWebinar()">
+    <button [disabled]="createWebinarForm.status === 'INVALID'" class="sb-btn sb-btn-normal sb-btn-primary"
+      (click)="createWebinar()">
       CREATE
     </button>
   </div>

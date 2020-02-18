@@ -44,7 +44,7 @@ export class ContentTocComponent implements OnInit {
   contentSelect(event) {
     if (_.get(event, 'content.model')) {
       const sessionDetails = JSON.parse(_.get(event, 'content.model.sessionDetails'));
-      window.location.href = sessionDetails.webinarUrl;
+      this.router.navigateByUrl(_.get(sessionDetails, 'webinarUrl'));
     }
   }
 
@@ -52,7 +52,6 @@ export class ContentTocComponent implements OnInit {
     const contentID = _.get(this.activatedRoute, 'snapshot.params.contentId');
     const childId = _.get(this.selectedChildNode, 'id');
 
-    // todo change the contenttype to Webinar - new content type
     const createContentRequestBody = {
       name: name,
       mimeType: 'video/mp4',
@@ -66,7 +65,7 @@ export class ContentTocComponent implements OnInit {
         "startdate": Date.parse(startDate),
         "endDate": Date.parse(endDate),
         "creator": "123",
-        "webinarUrl": `/webinar/launch/webinar#${contentID}`
+        "webinarUrl": `/workspace/webinar/launch/webinar#${contentID}`
       }
     }
     this.contentService.createContent(createContentRequestBody).pipe(
@@ -79,7 +78,7 @@ export class ContentTocComponent implements OnInit {
         return this.contentService.addResourceToHierarchy(request);
       })
     ).subscribe(res => {
-      this.router.navigate(['/webinar/launch/webinar#', contentID]).catch(err => {
+      this.router.navigate(['/workspace/webinar/launch/webinar#', contentID]).catch(err => {
         console.log('failed to launch webinar');
       })
     }, err => {

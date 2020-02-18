@@ -2,6 +2,7 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import * as _ from 'lodash-es';
 import { Router } from '@angular/router';
 import { ConfigService } from '../services';
+import { LoginService } from '../services/login/login.service';
 @Component({
   selector: 'app-workspace',
   templateUrl: './workspace.component.html',
@@ -12,7 +13,7 @@ export class WorkspaceComponent implements OnInit {
   metaData = [];
   contents = [];
   showContentQuality = false;
-  constructor(public config: ConfigService, public router: Router) { }
+  constructor(public config: ConfigService, public router: Router, private loginService: LoginService) { }
   ngOnInit() {
 
   }
