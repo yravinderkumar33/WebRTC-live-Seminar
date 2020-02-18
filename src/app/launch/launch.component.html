@@ -1,2 +1,83 @@
-<h1>WEBINAR</h1>
-<button class="sb-btn sb-btn-link-primary" routerLink="/webinar">LAUNCH WEBINAR</button>
+<div class="login-bg">
+    <div class="main">
+        <div class="logo-section">
+            <div class="brand-logo">
+                <img src="./../../../../../assets/images/sunbird_logo.png" alt="brand logo">
+            </div>
+            <div class="main-logo">
+                <img src="./../../../../../assets/images/final-logo.png" alt=" logo">
+            </div>
+        </div>
+        <div class="login-conatiner-main">
+            <div class="scaner-section">
+                <div class="scaner" *ngIf="!qrCode && !captureImage">
+                    <img class="scanner-gif" src="./../../../../../assets/images/scaner.gif" alt="scaner">
+                    <button type="button" class="capture-btn" id="myBtn"
+                        (click)="startCamera();captureImage=!captureImage;">Capture</button>
+                    <div class="qrcode-link">
+                        <span class="seperator">OR</span>
+                        <a (click)="qrCode= !qrCode">QR Code</a>
+                    </div>
+                </div>
+    
+                <div class="scaner" *ngIf="!qrCode && captureImage">
+                    <video #video class="vid" autoplay></video>
+                    <canvas #canvas class="vid"></canvas>
+                    <button type="button" class="capture-btn" id="myBtn" (click)="capture()">Capture</button>
+                    <div class="qrcode-link">
+                        <span class="seperator">OR</span>
+                        <a (click)="qrCode= !qrCode">QR Code</a>
+                    </div>
+                </div>
+    
+                <div class="qr-code" *ngIf="qrCode">
+                    <img src="./../../../../../assets/images/qr-code.svg" alt="QR Code">
+                    <div class="input-container">
+                        <input class="input-field" [(ngModel)]="visitorid" type="text" placeholder="Enter your QR Code" name="qr-code">
+                        <span ngClass="" class="icon" (click)="getUserDtailsByVisitorId();"></span>
+                    </div>
+                    <div class="qrcode-link">
+                        <span class="seperator">OR</span>
+                        <a (click)="qrCode= !qrCode; startCamera();">Capture</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+   
+</div>
+
+
+<div id="myModal" class="login-modal" *ngIf="openErrorModal || openSuccessModal">
+    <div class="modal-content">
+        <div class="modal-body">
+            <div class="status-content" *ngIf="openSuccessModal">
+                <img src="./../../../../../assets/images/check.gif" alt="checked">
+                <div class="status-info">
+                    <div class="title">
+                        {{name}}
+                    </div>
+                    <div class="status-msg"> 
+                        You are recognized as Mr/Mrs. {{name}}. Please confirm and continue to create your content.
+                    </div>
+                </div>
+                <a class="sb-btn sb-btn-secondary sb-btn-normal"
+                    (click)="gotoWorkspace();openErrorModal = false;">CONFIRM</a>
+            </div>
+            <!-- failed message modal content -->
+            <div class="status-content" *ngIf="openErrorModal">
+                <img src="./../../../../../assets/images/failed.gif" alt="failed">
+                <div class="status-info">
+                    <div class="title">
+                        Title comes here
+                    </div>
+                    <div class="status-msg"> You are not recognized. Please try
+                        again or continue with QR Code.
+                    </div>
+                </div>
+                <a type="button" class="sb-btn sb-btn-normal close-btn" (click)="closeModal()">CLOSE</a>
+            </div>
+        </div>
+    </div>
+</div>

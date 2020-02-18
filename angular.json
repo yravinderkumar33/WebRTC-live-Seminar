@@ -30,6 +30,7 @@
             "styles": [
               "src/assets/styles/semantic/semantic.min.css",
               "src/styles.css",
+              "src/assets/styles.css",
               "src/assets/styles/styles.scss",
               "./node_modules/common-consumption-styles/assets/_styles.scss"
             ],
