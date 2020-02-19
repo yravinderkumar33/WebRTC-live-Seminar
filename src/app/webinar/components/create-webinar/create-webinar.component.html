@@ -30,8 +30,7 @@
           <div class="ui read-only calendar rangestartAdd" id="rangestartAdd">
             <div class="sb-field ui left icon input">
               <i class="calendar icon date-calendar"></i>
-              <input formControlName="startDate" class="sb-form-control" [pickerMinDate]="pickerMinDate" suiDatepicker
-                [pickerMode]="'date'">
+              <input formControlName="startDate" class="sb-form-control" type="datetime-local">
             </div>
           </div>
         </div>
@@ -41,8 +40,7 @@
           <div class="ui read-only calendar rangestartAdd" id="rangestartAdd">
             <div class="sb-field ui left icon input">
               <i class="calendar icon date-calendar"></i>
-              <input formControlName="endDate" class="sb-form-control" suiDatepicker [pickerMinDate]="pickerMinDate"
-                [pickerMode]="'date'">
+              <input formControlName="endDate" class="sb-form-control" type="datetime-local">
             </div>
           </div>
         </div>

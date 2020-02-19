@@ -47,7 +47,7 @@ export class ContentTocComponent implements OnInit {
   contentSelect(event) {
     if (_.get(event, 'content.model')) {
       const sessionDetails = JSON.parse(_.get(event, 'content.model.sessionDetails'));
-      this.router.navigateByUrl(_.get(sessionDetails, 'webinarUrl'), { state: { sessionDetails } });
+      this.router.navigateByUrl(_.get(sessionDetails, 'webinarUrl'), { state: { sessionDetails, newContentId: _.get(event, 'content.model.identifier') } });
     }
   }
 

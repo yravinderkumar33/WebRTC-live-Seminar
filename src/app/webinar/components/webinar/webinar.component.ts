@@ -112,40 +112,27 @@ export class WebinarComponent implements OnInit {
 
   }
 
-
   uploadContent() {
-    const createContentRequestBody = {
-      "name": "Test Video",
-      "description": "hey this is a test video",
-      "code": "kp.test.res.1",
-      "mimeType": "video/webm",
-      "contentType": "Resource",
-      "mediaType": "content"
-    }
-
     const fileName = 'test.webm';
-
-    this.contentService.createContent(createContentRequestBody).pipe(
-      mergeMap((res: any) => {
-        const contentId = _.get(res, 'result.identifier');
-        return this.contentService.uploadContent({ fileName: fileName, contentId: contentId }).pipe(
-          switchMap((res: any) => {
-            const signedUrl = _.get(res, 'result.pre_signed_url');
-            const recordedBlobs: [] = window['returnRecordedBlobs']() || [];
-            if (recordedBlobs.length) {
-              return this.contentService.uploadFile({ url: signedUrl, contentData: recordedBlobs, fileName: fileName }).pipe(
-                mergeMap(res => {
-                  return this.contentService.updateContentWithVideo(signedUrl.split('?')[0], contentId);
-                })
-              );
-            } else {
-              return throwError('failed to upload recording. Please try again later...');
-            }
-          })
-        );
+    const contentId = _.get(this.sessionDetails, 'newContentId');
+    this.contentService.uploadContent({ fileName: fileName, contentId: contentId }).pipe(
+      switchMap((res: any) => {
+        const signedUrl = _.get(res, 'result.pre_signed_url');
+        const recordedBlobs: [] = window['returnRecordedBlobs']() || [];
+        if (recordedBlobs.length) {
+          return this.contentService.uploadFile({ url: signedUrl, contentData: recordedBlobs, fileName: fileName }).pipe(
+            mergeMap(res => {
+              return this.contentService.updateContentWithVideo(signedUrl.split('?')[0], contentId);
+            })
+          );
+        } else {
+          return throwError('failed to upload recording. Please try again later...');
+        }
       })
     ).subscribe(
       res => {
+        const url = `https://devcon.sunbirded.org/play/content/${_.get(res, 'result.node_id')}?contentType=CoachingSession`;
+        window.open(url, '_blank');
         console.log('Result from content upload api', res);
         this.toasterService.info('Recording has been successfully uploaded.');
       },
@@ -154,8 +141,6 @@ export class WebinarComponent implements OnInit {
         this.toasterService.error('Failed to upload video. Pleae try again Later...');
       }
     )
-
-
   }
 
 

@@ -1,5 +1,6 @@
 import { Component, OnInit, EventEmitter, Output, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
+import * as _ from 'lodash-es';
 @Component({
   selector: 'app-create-webinar',
   templateUrl: './create-webinar.component.html',
@@ -19,13 +20,35 @@ export class CreateWebinarComponent implements OnInit {
     this.prepareWebinarForm();
   }
 
+  validateStartDate(control: AbstractControl) {
+    const value = _.get(control, 'value');
+    const currentTime = Date.now();
+    if (value < currentTime && value !== null) {
+      return {
+        invalidtime: 'Start date cannot be less than the current time'
+      }
+    }
+    return null;
+  }
+
+  validateEndDate(control: AbstractControl) {
+    const value = _.get(control, 'value');
+    const currentTime = Date.now();
+    if (value < currentTime && value !== null) {
+      return {
+        invalidtime: 'End date cannot be less than the current time'
+      }
+    }
+    return null;
+  }
+
   private prepareWebinarForm() {
     this.createWebinarForm = this.fb.group({
       name: ['', Validators.required],
       description: ['', Validators.required],
-      startDate: [null],
+      startDate: [null, Validators.required],
       endDate: [null, Validators.required]
-    })
+    });
   }
 
   public createWebinar() {

@@ -145,10 +145,18 @@ export class CollectionTreeComponent implements OnInit, OnChanges, OnDestroy {
         if (_.get(node, 'model.contentType') === 'CoachingSession' && _.get(node, 'model.sessionDetails')) {
           const sessionDetails = JSON.parse(_.get(node, 'model.sessionDetails'));
           let infoString = '';
-          if (_.get(sessionDetails, 'endDate') - Date.now() > 0) {
-            infoString = `<b><i>Webinar is about to start in  ${(((_.get(sessionDetails, 'endDate') - Date.now()) / 1000) / 60).toFixed(1)} minutes</i><b>`;
-          } else {
-            infoString = `<b><i>Webinar has ended</i><b>`;
+          const startdate = _.get(sessionDetails, 'startdate');
+          const enddate = _.get(sessionDetails, 'endDate');
+          const currenttime = Date.now();
+
+          if (currenttime < startdate) {
+            infoString = `<b><i>Webinar is about to start in Soon....</i><b>`;
+          }
+          if (currenttime > startdate && currenttime < enddate) {
+            infoString = `<b><i>Webinar is Live Please Join</i><b>`;
+          }
+          if (currenttime > enddate) {
+            infoString = `<b><i>Webinar has ended.</i><b>`;
           }
           node.title = `${node.model.name}- ${infoString}` || 'Untitled File';
           node.extraClasses = '';
