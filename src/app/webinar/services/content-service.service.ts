@@ -146,7 +146,7 @@ export class ContentServiceService {
         'cache': 'false'
       })
     };
-    const url = `https://devcon.sunbirded.org/api/private/content/v3/url/${contentId}`;
+    const url = `https://devcon.sunbirded.org/action/content/v3/upload/${contentId}`;
     return this.http.post(url, data, httpOptions);
   }
 

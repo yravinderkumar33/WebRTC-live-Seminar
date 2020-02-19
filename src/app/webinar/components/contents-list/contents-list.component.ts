@@ -14,7 +14,7 @@ export class ContentsListComponent implements OnInit {
   public contents$;
 
   constructor(private contentService: ContentServiceService, private router: Router) {
-    this.contentIds = ['do_1129601906803998721194'];
+    this.contentIds = ['do_112960610838757376177'];
   }
   ngOnInit() {
     this.contents$ = this.fetchContents(this.contentIds);

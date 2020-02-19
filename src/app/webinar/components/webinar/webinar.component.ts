@@ -24,6 +24,7 @@ export class WebinarComponent implements OnInit {
   disableDownloadButton: boolean = true;
   disableEndRecordStreamButton: boolean = true;
   showLoader: boolean = true;
+  sessionDetails: any;
 
   config = {
     openSocket: function (config) {
@@ -163,11 +164,13 @@ export class WebinarComponent implements OnInit {
       window.location.href = window.location.href.split('#')[0] + '#' + (Math.random() * 100).toString().replace('.', '');
       window.location.reload();
     }
+
+    console.warn('Reading State', history.state);
+    this.sessionDetails = _.get(window, 'history.state');
+
     this.participants = document.getElementById("participants") || document.body;
     this.startConferencing = document.getElementById('start-conferencing');
     this.roomsList = document.getElementById('rooms-list');
-
-    // if (this.startConferencing) this.startConferencing.onclick = this.createButtonClickHandler;
   }
 
   createButtonClickHandler() {

@@ -1,3 +1,4 @@
+import { ToasterService } from './../../../services/toaster/toaster.service';
 import { LoginService } from './../../../services/login/login.service';
 import { ContentServiceService } from './../../services/content-service.service';
 import { Component, OnInit } from '@angular/core';
@@ -15,7 +16,7 @@ export class ContentTocComponent implements OnInit {
   private selectedChildNode;
   collectionTreeNodes;
   constructor(private activatedRoute: ActivatedRoute, private contentService: ContentServiceService, private router: Router,
-    private loginService: LoginService) { }
+    private loginService: LoginService, private toasterService: ToasterService) { }
   public content$;
   public showCreateWebinarForm: boolean;
 
@@ -46,14 +47,13 @@ export class ContentTocComponent implements OnInit {
   contentSelect(event) {
     if (_.get(event, 'content.model')) {
       const sessionDetails = JSON.parse(_.get(event, 'content.model.sessionDetails'));
-      this.router.navigateByUrl(_.get(sessionDetails, 'webinarUrl'));
+      this.router.navigateByUrl(_.get(sessionDetails, 'webinarUrl'), { state: { sessionDetails } });
     }
   }
 
   createWebinar({ name, description, startDate, endDate }) {
     const contentID = _.get(this.activatedRoute, 'snapshot.params.contentId');
     const childId = _.get(this.selectedChildNode, 'id');
-
     const createContentRequestBody = {
       name: name,
       mimeType: 'video/webm',
@@ -66,6 +66,8 @@ export class ContentTocComponent implements OnInit {
         "description": description,
         "startdate": Date.parse(startDate),
         "endDate": Date.parse(endDate),
+        "contentId": contentID,
+        "textbookunit": childId,
         "creator": this.loginService.user || 'test-user-123',
         "webinarUrl": `/workspace/webinar/launch/webinar#${contentID}`
       }
@@ -81,14 +83,10 @@ export class ContentTocComponent implements OnInit {
         return this.contentService.addResourceToHierarchy(request);
       })
     ).subscribe(res => {
-      this.router.navigate(['/workspace/webinar/launch/webinar#', contentID]).catch(err => {
-        console.log('failed to launch webinar');
-      })
+      this.toasterService.info('Webinar created successfully...');
     }, err => {
       console.log('err', err);
-      this.router.navigate(['/']).catch(err => {
-        console.log('failed to redirect to home page');
-      })
+      this.toasterService.error('Failed to create webinar. Please try again later');
       console.log('Something went wrong during the process');
     })
   }
