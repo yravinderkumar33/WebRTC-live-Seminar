@@ -21,7 +21,7 @@
   <div class="webinar-data">
     <div class="action-btns">
       <ng-container *ngIf="loginService.user && loginService.isLoggedIn">
-        <button id="endRecording" [disabled]="disableEndRecordStreamButton" (click)="endRecording()"
+        <button id="endRecording" [disabled]="disableEndRecordStreamButton" (click)="endRecording(); disableEndRecordStreamButton = true"
           class="sb-btn sb-btn-primary sb-btn-normal mr-8">End Recording</button>
         <button id="downloadRecording" [disabled]="disableDownloadButton" (click)="downloadRecording()"
           class="sb-btn sb-btn-primary sb-btn-normal">Download & Publish Recording</button>
