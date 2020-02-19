@@ -7,6 +7,7 @@ import * as _ from 'lodash-es';
 import { LoginService } from 'src/app/services/login/login.service';
 import { ContentServiceService } from '../../services/content-service.service';
 import { throwError } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-webinar',
@@ -91,7 +92,7 @@ export class WebinarComponent implements OnInit {
   };
 
   constructor(private broadcastService: WebrtcBroadcastService, private loginService: LoginService,
-    private contentService: ContentServiceService, private toasterService: ToasterService) {
+    private contentService: ContentServiceService, private toasterService: ToasterService, private router: Router) {
     this.broadcastUI = this.broadcastService.broadcast(this.config);
   }
 

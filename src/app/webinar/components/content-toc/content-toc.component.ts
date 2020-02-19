@@ -84,6 +84,8 @@ export class ContentTocComponent implements OnInit {
       })
     ).subscribe(res => {
       this.toasterService.info('Webinar created successfully...');
+      this.content$ = this.getContentDetails(_.get(this.activatedRoute, 'snapshot.params.contentId'));
+
     }, err => {
       console.log('err', err);
       this.toasterService.error('Failed to create webinar. Please try again later');
