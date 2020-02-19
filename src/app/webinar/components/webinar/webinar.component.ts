@@ -17,7 +17,7 @@ import { Router } from '@angular/router';
 export class WebinarComponent implements OnInit {
 
   hideCreateWebinarForm: boolean = false;
-
+  lodash = _;
   broadcastUI;
   participants
   startConferencing
@@ -27,6 +27,9 @@ export class WebinarComponent implements OnInit {
   showLoader: boolean = true;
   sessionDetails: any;
   addClass: boolean = false;
+  propertiesToshow: any;
+
+  contentDetails$: any;
 
   config = {
     openSocket: function (config) {
@@ -93,7 +96,7 @@ export class WebinarComponent implements OnInit {
     }
   };
 
-  constructor(private broadcastService: WebrtcBroadcastService, private loginService: LoginService,
+  constructor(private broadcastService: WebrtcBroadcastService, public loginService: LoginService,
     private contentService: ContentServiceService, private toasterService: ToasterService, private router: Router) {
     this.broadcastUI = this.broadcastService.broadcast(this.config);
   }
@@ -117,6 +120,7 @@ export class WebinarComponent implements OnInit {
 
   uploadContent() {
     const fileName = 'test.webm';
+    const sessionDetails = _.get(this.sessionDetails, 'sessionDetails');
     const contentId = _.get(this.sessionDetails, 'newContentId');
     this.contentService.uploadContent({ fileName: fileName, contentId: contentId }).pipe(
       switchMap((res: any) => {
@@ -126,6 +130,10 @@ export class WebinarComponent implements OnInit {
           return this.contentService.uploadFile({ url: signedUrl, contentData: recordedBlobs, fileName: fileName }).pipe(
             mergeMap(res => {
               return this.contentService.updateContentWithVideo(signedUrl.split('?')[0], contentId);
+            })
+          ).pipe(
+            mergeMap(res => {
+              return this.contentService.addResourceToHierarchy({ rootId: _.get(sessionDetails, 'contentId'), unitId: _.get(sessionDetails, 'textbookunit'), children: [contentId] })
             })
           );
         } else {
@@ -138,7 +146,7 @@ export class WebinarComponent implements OnInit {
       )
       .subscribe(
         res => {
-          const url = `https://devcon.sunbirded.org/play/content/${_.get(res, 'result.node_id')}?contentType=CoachingSession`;
+          const url = `https://devcon.sunbirded.org/play/content/${contentId}?contentType=CoachingSession`;
           window.open(url, '_blank');
           console.log('Result from content upload api', res);
           this.toasterService.info('Recording has been successfully uploaded.');
@@ -156,10 +164,12 @@ export class WebinarComponent implements OnInit {
       window.location.href = window.location.href.split('#')[0] + '#' + (Math.random() * 100).toString().replace('.', '');
       window.location.reload();
     }
-
     console.warn('Reading State', history.state);
     this.sessionDetails = _.get(window, 'history.state');
-
+    if (this.sessionDetails.sessionDetails) {
+      this.contentDetails$ = this.contentService.getCollectionHierarchy(this.sessionDetails.sessionDetails.contentId);
+      this.propertiesToshow = _.pick(this.sessionDetails.sessionDetails, ['name', 'description', 'creator', 'startdate', 'endDate']);
+    }
     this.participants = document.getElementById("participants") || document.body;
     this.startConferencing = document.getElementById('start-conferencing');
     this.roomsList = document.getElementById('rooms-list');

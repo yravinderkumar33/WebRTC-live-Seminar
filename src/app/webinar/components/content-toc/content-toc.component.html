@@ -1,7 +1,6 @@
-<div *ngIf="content$ | async as content; else loading; ">
-    <div *ngIf="content && content.data && content.data.children && content.data.children.length">
-
-        <div class="ui container mt-24">
+<div class="ui container mt-24">
+    <div *ngIf="content$ | async as content; else loading; ">
+        <div *ngIf="content && content.data && content.data.children && content.data.children.length">
             <div class="twelve wide column">
                 <div class="sb-pageSection">
                     <div class="sb-pageSection-header">
@@ -12,18 +11,15 @@
                 </div>
             </div>
             <div class="twelve wide column">
-                <app-collection-tree (contentSelect)="contentSelect($event)" [nodes]="content" (handleWebinarEvent)="handleWebinar($event)">
+                <app-collection-tree (contentSelect)="contentSelect($event)" [nodes]="content"
+                    (handleWebinarEvent)="handleWebinar($event)">
                 </app-collection-tree>
             </div>
         </div>
     </div>
+    <app-create-webinar (close)="showCreateWebinarForm = false" *ngIf="showCreateWebinarForm"
+        (createWebinarEvent)="createWebinar($event)"></app-create-webinar>
+    <ng-template #loading>
+        <app-loader></app-loader>
+    </ng-template>
 </div>
-
-<app-create-webinar (close)="showCreateWebinarForm = false" *ngIf="showCreateWebinarForm"
-    (createWebinarEvent)="createWebinar($event)"></app-create-webinar>
-
-<ng-template #loading>
-    <div>
-        Loading...
-    </div>
-</ng-template>

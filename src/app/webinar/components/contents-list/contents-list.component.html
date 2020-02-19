@@ -1,8 +1,8 @@
-<div class="content-list sb-card-container">
+<div class="content-list sb-card-container" *ngIf="contents$ | async as contents; else loading;">
     <div class="sb-card">
         <div class="sb-body">
             <div>
-                <div *ngIf="contents$ | async as contents; else loading;" class="grid">
+                <div class="grid">
                     <div *ngFor="let content of contents">
                         <sb-library-card (click)="onBookClick(content)" [isMobile]="false" [isOffline]="false"
                             [content]="content" [cardImg]="content.posterImage">
@@ -10,9 +10,12 @@
                     </div>
                 </div>
             </div>
-            <ng-template #loading>
-                <app-loader></app-loader>
-            </ng-template>
         </div>
     </div>
 </div>
+
+<ng-template #loading>
+    <div class="ui container mt-24">
+        <app-loader></app-loader>
+    </div>
+</ng-template>

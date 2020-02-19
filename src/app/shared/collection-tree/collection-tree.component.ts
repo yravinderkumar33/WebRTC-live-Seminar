@@ -142,7 +142,7 @@ export class CollectionTreeComponent implements OnInit, OnChanges, OnDestroy {
         node.title = node.model.name + '<span> (' + this.commingSoonMessage + ')</span>';
         node.extraClasses = 'disabled';
       } else {
-        if (_.get(node, 'model.contentType') === 'CoachingSession' && _.get(node, 'model.sessionDetails')) {
+        if (_.get(node, 'model.contentType') === 'CoachingSession' && !_.get(node, 'model.artifactUrl')  && _.get(node, 'model.sessionDetails')) {
           const sessionDetails = JSON.parse(_.get(node, 'model.sessionDetails'));
           let infoString = '';
           const startdate = _.get(sessionDetails, 'startdate');
@@ -150,7 +150,7 @@ export class CollectionTreeComponent implements OnInit, OnChanges, OnDestroy {
           const currenttime = Date.now();
 
           if (currenttime < startdate) {
-            infoString = `<b><i>Webinar is about to start in Soon....</i><b>`;
+            infoString = `<b><i>Webinar is about to start Soon....</i><b>`;
           }
           if (currenttime > startdate && currenttime < enddate) {
             infoString = `<b><i>Webinar is Live Please Join</i><b>`;

@@ -1,14 +1,12 @@
-<!-- <div class="ui container">
+<div class="webinar-section" [ngClass]="{'webinar-video-section': addClass}">
   <div class="webinar-container visible">
     <div class="sb-pageSection ">
       <div class="sb-pageSection-header">
         <h1 class="sb-pageSection-title">Live Coaching Session</h1>
       </div>
-
       <div class="sb-pageSection-header" *ngIf="!loginService.user && !loginService.isLoggedIn && showLoader">
         <app-loader [data]="{loaderMessage: 'Searching For Chat Rooms...'}"></app-loader>
       </div>
-
       <div class="sb-field-group" *ngIf="!hideCreateWebinarForm && loginService.user && loginService.isLoggedIn">
         <label>Please Enter Chat Room Name To Start The Webinar:</label>
         <input type="text" class="sb-form-control required mb-16" id="conference-name" placeholder="Chat Room Name"
@@ -20,77 +18,40 @@
       </div>
     </div>
   </div>
-
-  <ng-container *ngIf="loginService.user && loginService.isLoggedIn">
-    <button id="endRecording" [disabled]="disableEndRecordStreamButton" (click)="endRecording()"
-      class="sb-btn sb-btn-primary sb-btn-normal">End Recording</button>
-    <button id="downloadRecording" [disabled]="disableDownloadButton" (click)="downloadRecording()"
-      class="sb-btn sb-btn-primary sb-btn-normal">Download & Publish Recording</button>
-  </ng-container>
-
-  <div style="padding: 40px 0;">
-    <div id="participants" class="video-play-container">
-    </div>
-  </div>
-
-
-
-  {{sessionDetails | json}} -->
-
-
-
-  <div class="webinar-section"  [ngClass]="{'webinar-video-section': addClass}">
-    <div class="webinar-container visible" >
-      <div class="sb-pageSection ">
-        <div class="sb-pageSection-header">
-          <h1 class="sb-pageSection-title">Live Coaching Session</h1>
-        </div>
-        <div class="sb-pageSection-header" *ngIf="!loginService.user && !loginService.isLoggedIn && showLoader">
-          <app-loader [data]="{loaderMessage: 'Searching For Chat Rooms...'}"></app-loader>
-        </div>
-        <div class="sb-field-group" *ngIf="!hideCreateWebinarForm && loginService.user && loginService.isLoggedIn">
-          <label>Please Enter Chat Room Name To Start The Webinar:</label>
-          <input type="text" class="sb-form-control required mb-16" id="conference-name" placeholder="Chat Room Name"
-            required>
-          <button id="start-conferencing" (click)="createButtonClickHandler()"
-            class="sb-btn sb-btn-primary sb-btn-normal">Create ChatRoom</button>
-        </div>
-        <div class="sb-field-group" id="rooms-list">
-        </div>
-      </div>
-    </div>
-    <div class="webinar-data">
-     <div class="action-btns">
+  <div class="webinar-data">
+    <div class="action-btns">
       <ng-container *ngIf="loginService.user && loginService.isLoggedIn">
         <button id="endRecording" [disabled]="disableEndRecordStreamButton" (click)="endRecording()"
-          class="sb-btn sb-btn-primary sb-btn-normal">End Recording</button>
+          class="sb-btn sb-btn-primary sb-btn-normal mr-8">End Recording</button>
         <button id="downloadRecording" [disabled]="disableDownloadButton" (click)="downloadRecording()"
           class="sb-btn sb-btn-primary sb-btn-normal">Download & Publish Recording</button>
       </ng-container>
-     </div>
-    
-      <div class="video-section">
-        <div id="participants" class="video-play-container">
-        </div>
-      </div>
-     <div class="json-data">
+    </div>
 
-      <div class="sb-meta-data-container">
-        <h4 class="sb-section-title">Content Information</h4>
-        <dl class="sb-meta-data sb-meta-d1">
-          <dt>Title</dt>
-          <dd>SNF Chapter 1 Kalrav Hindi</dd>
-          <dt>Ownership</dt>
-          <dd></dd>
-          <dt>Organization</dt>
-          <dd>NTP</dd>
-          <dt>Author</dt>
-          <dd>Balaji A</dd>
-          <dt>Medium</dt>
+    <div class="video-section">
+      <div id="participants" class="video-play-container">
+      </div>
+    </div>
+    <div class="json-data">
+
+      <div class="sb-meta-data-container sb-meta-data-row-facing">
+        <div class="sb-meta-data-title">Webinar Details</div>
+        <dl class="sb-meta-data sb-meta-d1 m-0">
+          <ng-container *ngFor="let key of lodash.keys(propertiesToshow)">
+            <dt>{{key}}</dt>
+            <dd>{{propertiesToshow[key]}}</dd>
+          </ng-container>
+
+          <ng-container *ngIf="contentDetails$ | async as content">
+            <dt>Course Name</dt>
+            <dd>{{content.name}}</dd>
+            <dt>Board</dt>
+            <dd>{{content.board || 'CBSE'}}</dd>
+          </ng-container>
         </dl>
-        </div>
+      </div>
 
       <!-- {{sessionDetails | json}} -->
-     </div>
     </div>
   </div>
+</div>

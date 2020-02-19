@@ -47,7 +47,6 @@
 }
 .webinar-container .sb-pageSection {
     width: 100%;
-    max-width: 480px;
     margin-bottom: 1em;
 }
 .webinar-data .action-btns{
@@ -78,34 +77,16 @@
     }
 }
 
-.sb-meta-data-container .sb-meta-data {
-    display: flex;
-    flex-flow: row wrap;
+.sb-meta-data-container.sb-meta-data-row-facing .sb-meta-data dd{
+    flex-basis: 50%;
 }
-.sb-meta-data-container.sb-meta-data-row-facing .sb-meta-data dt {
-    flex-basis: 30%;
-    text-align: right;
-    word-break: break-all;
-    color: hsl(0, 0%, 40%);
+.sb-meta-data-container.sb-meta-data-row-facing .sb-meta-data dt{
+    flex-basis: 50%;
 }
-.sb-meta-data-container .sb-meta-data dd, .sb-meta-data-container .sb-meta-data dt {
-    line-height: 1.375rem;
-    font-size: .875rem;
-    text-transform: inherit;
-    padding: .25rem;
+.sb-meta-data-title{
+    font-size: 1.5em;
+    font-weight: 700;
 }
-.sb-meta-data-container.sb-meta-data-row-facing .sb-meta-data dt::after {
-    content: ":";
-    width: 10px;
-    margin: 0 4px;
-}
-.sb-meta-data-container.sb-meta-data-row-facing .sb-meta-data dd {
-    flex-basis: 70%;
-    flex-grow: 1;
-    color: hsl(0, 0%, 20%);
-}
-
-
 
 ::ng-deep {
     

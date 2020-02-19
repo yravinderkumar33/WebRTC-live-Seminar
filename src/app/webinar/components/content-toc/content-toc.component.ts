@@ -46,8 +46,26 @@ export class ContentTocComponent implements OnInit {
 
   contentSelect(event) {
     if (_.get(event, 'content.model')) {
-      const sessionDetails = JSON.parse(_.get(event, 'content.model.sessionDetails'));
-      this.router.navigateByUrl(_.get(sessionDetails, 'webinarUrl'), { state: { sessionDetails, newContentId: _.get(event, 'content.model.identifier') } });
+      if (_.get(event, 'content.model.artifactUrl')) {
+        const url = `https://devcon.sunbirded.org/play/content/${_.get(event, 'content.model.identifier')}?contentType=CoachingSession`;
+        window.open(url, '_blank');
+      } else if (_.get(event, 'content.model.sessionDetails')) {
+        const sessionDetails = JSON.parse(_.get(event, 'content.model.sessionDetails'));
+        const startdate = _.get(sessionDetails, 'startdate');
+        const enddate = _.get(sessionDetails, 'endDate');
+        const currenttime = Date.now();
+        if (currenttime > startdate && currenttime < enddate) {
+          this.router.navigateByUrl(_.get(sessionDetails, 'webinarUrl'), { state: { sessionDetails, newContentId: _.get(event, 'content.model.identifier') } });
+        } else {
+          let message = ''
+          if (currenttime < startdate) {
+            message = 'You cannot join webinar now. Please come back in the scheduled slot';
+          } else {
+            message = 'Webinar is already ended. You cannot join now.';
+          }
+          this.toasterService.warning(message);
+        }
+      }
     }
   }
 
