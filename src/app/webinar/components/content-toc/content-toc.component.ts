@@ -1,3 +1,4 @@
+import { LoginService } from './../../../services/login/login.service';
 import { ContentServiceService } from './../../services/content-service.service';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -13,7 +14,8 @@ export class ContentTocComponent implements OnInit {
 
   private selectedChildNode;
   collectionTreeNodes;
-  constructor(private activatedRoute: ActivatedRoute, private contentService: ContentServiceService, private router: Router) { }
+  constructor(private activatedRoute: ActivatedRoute, private contentService: ContentServiceService, private router: Router,
+    private loginService: LoginService) { }
   public content$;
   public showCreateWebinarForm: boolean;
 
@@ -54,7 +56,7 @@ export class ContentTocComponent implements OnInit {
 
     const createContentRequestBody = {
       name: name,
-      mimeType: 'video/mp4',
+      mimeType: 'video/webm',
       code: "test.coaching.0",
       contentType: "CoachingSession",
       startTime: Date.parse(startDate),
@@ -64,10 +66,11 @@ export class ContentTocComponent implements OnInit {
         "description": description,
         "startdate": Date.parse(startDate),
         "endDate": Date.parse(endDate),
-        "creator": "123",
+        "creator": this.loginService.user || 'test-user-123',
         "webinarUrl": `/workspace/webinar/launch/webinar#${contentID}`
       }
     }
+
     this.contentService.createContent(createContentRequestBody).pipe(
       mergeMap((res: any) => {
         const request = {

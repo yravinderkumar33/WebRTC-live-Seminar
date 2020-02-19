@@ -21,6 +21,11 @@ function downloadRecordingStream() {
         window.URL.revokeObjectURL(url);
     }, 100);
 }
+
+function returnRecordedBlobs(){
+    return recordedBlobs;
+}
+
 function handleSourceOpen(event) {
     console.log('MediaSource opened');
     sourceBuffer = mediaSource.addSourceBuffer('video/webm; codecs="vp8"');

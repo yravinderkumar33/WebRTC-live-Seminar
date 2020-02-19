@@ -1,8 +1,12 @@
+import { ToasterService } from './../../../services/toaster/toaster.service';
+import { mergeMap, switchMap } from 'rxjs/operators';
 import { environment } from './../../../../environments/environment';
 import { Component, OnInit } from '@angular/core';
 import { WebrtcBroadcastService } from '../../services/webrtc-broadcast.service';
 import * as _ from 'lodash-es';
 import { LoginService } from 'src/app/services/login/login.service';
+import { ContentServiceService } from '../../services/content-service.service';
+import { throwError } from 'rxjs';
 
 @Component({
   selector: 'app-webinar',
@@ -85,7 +89,8 @@ export class WebinarComponent implements OnInit {
     }
   };
 
-  constructor(private broadcastService: WebrtcBroadcastService, private loginService: LoginService) {
+  constructor(private broadcastService: WebrtcBroadcastService, private loginService: LoginService,
+    private contentService: ContentServiceService, private toasterService: ToasterService) {
     this.broadcastUI = this.broadcastService.broadcast(this.config);
   }
 
@@ -101,7 +106,57 @@ export class WebinarComponent implements OnInit {
     if (_.get(window, 'downloadRecordingStream')) {
       window['downloadRecordingStream']();
     }
+
+    this.uploadContent();
+
   }
+
+
+  uploadContent() {
+    const createContentRequestBody = {
+      "name": "Test Video",
+      "description": "hey this is a test video",
+      "code": "kp.test.res.1",
+      "mimeType": "video/webm",
+      "contentType": "Resource",
+      "mediaType": "content"
+    }
+
+    const fileName = 'test.webm';
+
+    this.contentService.createContent(createContentRequestBody).pipe(
+      mergeMap((res: any) => {
+        const contentId = _.get(res, 'result.identifier');
+        return this.contentService.uploadContent({ fileName: fileName, contentId: contentId }).pipe(
+          switchMap((res: any) => {
+            const signedUrl = _.get(res, 'result.pre_signed_url');
+            const recordedBlobs: [] = window['returnRecordedBlobs']() || [];
+            if (recordedBlobs.length) {
+              return this.contentService.uploadFile({ url: signedUrl, contentData: recordedBlobs, fileName: fileName }).pipe(
+                mergeMap(res => {
+                  return this.contentService.updateContentWithVideo(signedUrl.split('?')[0], contentId);
+                })
+              );
+            } else {
+              return throwError('failed to upload recording. Please try again later...');
+            }
+          })
+        );
+      })
+    ).subscribe(
+      res => {
+        console.log('Result from content upload api', res);
+        this.toasterService.info('Recording has been successfully uploaded.');
+      },
+      err => {
+        console.log('Upload failed', err);
+        this.toasterService.error('Failed to upload video. Pleae try again Later...');
+      }
+    )
+
+
+  }
+
 
   ngOnInit() {
     if (!window.location.hash.replace('#', '').length) {

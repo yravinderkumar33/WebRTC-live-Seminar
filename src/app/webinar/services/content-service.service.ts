@@ -1,6 +1,6 @@
 import { environment } from './../../../environments/environment';
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { mergeMap, map, catchError } from 'rxjs/operators'
 import { throwError, of, from, forkJoin, Observable } from 'rxjs';
 import * as _ from 'lodash-es';
@@ -59,30 +59,95 @@ export class ContentServiceService {
     return this.patchRequestCall(requestObj);
   }
 
-  createContent({ name, mimeType, code, contentType, startTime, endTime, sessionDetails }) {
+  createContent({ name, description = 'this is a test file', mediaType = undefined, mimeType, code, contentType, startTime = undefined, endTime = undefined, sessionDetails = undefined }) {
+    const data = {
+      "request": {
+        "content": {
+          "name": name,
+          "mimeType": mimeType,
+          "code": code,
+          "contentType": contentType,
+          description
+        }
+      }
+    };
+    if (mediaType) {
+      data.request.content["mediaType"] = mediaType;
+    }
+    if (startTime) {
+      data.request.content["startTime"] = startTime;
+    }
+    if (sessionDetails) {
+      data.request.content["sessionDetails"] = sessionDetails;
+    }
+    if (endTime) {
+      data.request.content["endTime"] = endTime;
+    }
+
     const requestObj = {
       header: {
         'Content-Type': 'application/json',
         'Authorization': environment.bearer,
         'x-channel-id': 'devcon'
       },
-      data: {
-        "request": {
-          "content": {
-            "name": name,
-            "mimeType": mimeType,
-            "code": code,
-            "contentType": contentType,
-            "startTime": startTime,
-            "endTime": endTime,
-            sessionDetails
-          }
-        }
-      },
+      data,
       baseUrl: `${environment.baseUrl}/action/`,
       url: 'content/v3/create'
     }
     return this.postRequestCall(requestObj)
+  }
+
+  public uploadContent({ fileName = 'test.webm', contentId }) {
+    const data = {
+      "request": {
+        "content": {
+          "fileName": fileName
+        }
+      }
+    }
+    const requestObj = {
+      header: {
+        'Content-Type': 'application/json',
+        'Authorization': environment.bearer
+      },
+      data,
+      baseUrl: `${environment.baseUrl}/api/private/`,
+      url: `content/v3/upload/url/${contentId}`
+    }
+    return this.postRequestCall(requestObj)
+  }
+
+  // method to upload the webinar recording to the azure blob storage.
+  uploadFile({ url, contentData, fileName = 'recording.webm' }) {
+    const blob = new Blob(contentData, { type: 'video/webm' });
+    const file = new File([blob], `${fileName}`, { type: 'video/webm' });
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'enctype': 'multipart/form-data',
+        'x-ms-blob-type': 'BlockBlob',
+        'processData': 'false'
+      })
+    };
+    return this.http.put(url, file, httpOptions);
+  }
+
+  updateContentWithVideo(fileURL, contentId) {
+    const data = new FormData();
+    data.append('fileUrl', fileURL);
+    data.append('mimeType', 'video/webm');
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Authorization': environment.bearer,
+        'user-id': 'mahesh',
+        'X-Channel-Id': 'devcon',
+        'enctype': 'multipart/form-data',
+        'processData': 'false',
+        'contentType': 'false',
+        'cache': 'false'
+      })
+    };
+    const url = `https://devcon.sunbirded.org/api/private/content/v3/url/${contentId}`;
+    return this.http.post(url, data, httpOptions);
   }
 
   public getCollectionHierarchy(identifier: string) {
