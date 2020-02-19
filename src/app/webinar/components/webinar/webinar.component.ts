@@ -1,12 +1,12 @@
 import { ToasterService } from './../../../services/toaster/toaster.service';
-import { mergeMap, switchMap, retry } from 'rxjs/operators';
+import { mergeMap, switchMap, retry, skipWhile } from 'rxjs/operators';
 import { environment } from './../../../../environments/environment';
 import { Component, OnInit } from '@angular/core';
 import { WebrtcBroadcastService } from '../../services/webrtc-broadcast.service';
 import * as _ from 'lodash-es';
 import { LoginService } from 'src/app/services/login/login.service';
 import { ContentServiceService } from '../../services/content-service.service';
-import { throwError } from 'rxjs';
+import { throwError, BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
 
 @Component({
@@ -28,8 +28,10 @@ export class WebinarComponent implements OnInit {
   sessionDetails: any;
   addClass: boolean = false;
   propertiesToshow: any;
-
   contentDetails$: any;
+
+  private redirectToToc$ = new BehaviorSubject(undefined).pipe(
+    skipWhile(data => data === undefined || data === null));
 
   config = {
     openSocket: function (config) {
@@ -119,6 +121,7 @@ export class WebinarComponent implements OnInit {
   }
 
   uploadContent() {
+    this.toasterService.info('Publishing of webinar is in progress....');
     const fileName = 'test.webm';
     const sessionDetails = _.get(this.sessionDetails, 'sessionDetails');
     const contentId = _.get(this.sessionDetails, 'newContentId');
@@ -150,6 +153,7 @@ export class WebinarComponent implements OnInit {
           window.open(url, '_blank');
           console.log('Result from content upload api', res);
           this.toasterService.info('Recording has been successfully uploaded.');
+          this.redirectToToc$['next'](true);
         },
         err => {
           console.log('Upload failed', err);
@@ -173,6 +177,12 @@ export class WebinarComponent implements OnInit {
     this.participants = document.getElementById("participants") || document.body;
     this.startConferencing = document.getElementById('start-conferencing');
     this.roomsList = document.getElementById('rooms-list');
+    this.redirectToToc$.subscribe(res => {
+      const url = _.get(this.sessionDetails, 'sessionDetails.contentId') ? `/workspace/webinar/play/${_.get(this.sessionDetails, 'sessionDetails.contentId')}` : '/workspace';
+      this.router.navigate([url]).then(res => {
+        this.toasterService.info('Webinar has been ended. Now you can watch recorded webinar directly. Thanks !!!');
+      })
+    })
   }
 
   createButtonClickHandler() {

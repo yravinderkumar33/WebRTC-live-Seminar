@@ -142,7 +142,7 @@ export class CollectionTreeComponent implements OnInit, OnChanges, OnDestroy {
         node.title = node.model.name + '<span> (' + this.commingSoonMessage + ')</span>';
         node.extraClasses = 'disabled';
       } else {
-        if (_.get(node, 'model.contentType') === 'CoachingSession' && !_.get(node, 'model.artifactUrl')  && _.get(node, 'model.sessionDetails')) {
+        if (_.get(node, 'model.contentType') === 'CoachingSession' && !_.get(node, 'model.artifactUrl') && _.get(node, 'model.sessionDetails')) {
           const sessionDetails = JSON.parse(_.get(node, 'model.sessionDetails'));
           let infoString = '';
           const startdate = _.get(sessionDetails, 'startdate');
@@ -161,8 +161,13 @@ export class CollectionTreeComponent implements OnInit, OnChanges, OnDestroy {
           node.title = `${node.model.name}- ${infoString}` || 'Untitled File';
           node.extraClasses = '';
         } else {
-          node.title = node.model.name || 'Untitled File';
-          node.extraClasses = '';
+          if (node.model.contentType === 'CoachingSession') {
+            node.title = `Recording of the webinar - <b>${node.model.name} </b>` || 'Untitled File';
+            node.extraClasses = '';
+          } else {
+            node.title = node.model.name || 'Untitled File';
+            node.extraClasses = '';
+          }
         }
       }
     });
