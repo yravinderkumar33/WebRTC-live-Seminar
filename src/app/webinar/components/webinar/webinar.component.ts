@@ -1,5 +1,5 @@
 import { ToasterService } from './../../../services/toaster/toaster.service';
-import { mergeMap, switchMap } from 'rxjs/operators';
+import { mergeMap, switchMap, retry } from 'rxjs/operators';
 import { environment } from './../../../../environments/environment';
 import { Component, OnInit } from '@angular/core';
 import { WebrtcBroadcastService } from '../../services/webrtc-broadcast.service';
@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-webinar',
   templateUrl: './webinar.component.html',
-  styleUrls: ['./webinar.component.css']
+  styleUrls: ['./webinar.component.scss']
 })
 export class WebinarComponent implements OnInit {
 
@@ -26,6 +26,7 @@ export class WebinarComponent implements OnInit {
   disableEndRecordStreamButton: boolean = true;
   showLoader: boolean = true;
   sessionDetails: any;
+  addClass: boolean = false;
 
   config = {
     openSocket: function (config) {
@@ -58,7 +59,8 @@ export class WebinarComponent implements OnInit {
       var video = media.video;
       video.setAttribute('controls', true);
       const div = document.createElement('div');
-      div.classList.add('video-play');
+      div.classList.add('video-play', 'aspectratio');
+      div.setAttribute('data-ratio', '16:9');
       div.appendChild(video);
       this.participants.insertBefore(div, this.participants.firstChild);
       video.play();
@@ -130,18 +132,22 @@ export class WebinarComponent implements OnInit {
           return throwError('failed to upload recording. Please try again later...');
         }
       })
-    ).subscribe(
-      res => {
-        const url = `https://devcon.sunbirded.org/play/content/${_.get(res, 'result.node_id')}?contentType=CoachingSession`;
-        window.open(url, '_blank');
-        console.log('Result from content upload api', res);
-        this.toasterService.info('Recording has been successfully uploaded.');
-      },
-      err => {
-        console.log('Upload failed', err);
-        this.toasterService.error('Failed to upload video. Pleae try again Later...');
-      }
     )
+      .pipe(
+        retry(1)
+      )
+      .subscribe(
+        res => {
+          const url = `https://devcon.sunbirded.org/play/content/${_.get(res, 'result.node_id')}?contentType=CoachingSession`;
+          window.open(url, '_blank');
+          console.log('Result from content upload api', res);
+          this.toasterService.info('Recording has been successfully uploaded.');
+        },
+        err => {
+          console.log('Upload failed', err);
+          this.toasterService.error('Failed to upload video. Pleae try again Later...');
+        }
+      )
   }
 
 
@@ -224,6 +230,7 @@ export class WebinarComponent implements OnInit {
     for (var i = 0; i < length; i++) {
       visibleElements[i]['style']['display'] = 'none';
     }
+    this.addClass = true;
   }
 
   rotateVideo(video) {

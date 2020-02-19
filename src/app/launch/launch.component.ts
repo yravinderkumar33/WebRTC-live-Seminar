@@ -6,8 +6,8 @@ import { throwError } from 'rxjs';
 import { Router } from '@angular/router';
 import { LoginService } from '../services/login/login.service';
 
-const STALL_ID = 'creation_2';
-const IDEA_ID = 'live_coaching_session';
+const STALL_ID = 'STA1';
+const IDEA_ID = 'IDE5';
 
 
 @Component({

@@ -6,7 +6,7 @@ import * as _ from 'lodash-es';
 @Component({
   selector: 'app-contents-list',
   templateUrl: './contents-list.component.html',
-  styleUrls: ['./contents-list.component.css']
+  styleUrls: ['./contents-list.component.scss']
 })
 export class ContentsListComponent implements OnInit {
 
